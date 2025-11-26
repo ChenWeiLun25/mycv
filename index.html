@@ -4,6 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>陳韡侖 | 前端工程師作品集</title>
+  <!-- Google Fonts & FontAwesome -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-XxR3G... (cdnjs hash omitted)" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -14,12 +17,15 @@
             'text-primary': '#1E293B',
             'text-secondary': '#64748B',
             'bg-light': '#F8FAFC',
+            accent: '#06b6d4',
+            'muted-2': '#e6f3ff',
           },
         },
       },
     }
   </script>
   <style>
+    body { font-family: "Inter", "Noto Sans TC", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
     :root {
       --primary: #3B82F6;
       --text-sub: #64748B;
@@ -32,6 +38,23 @@
     .line { transition: all 0.25s ease; }
     .profile-img { transition: transform 0.35s ease, box-shadow 0.25s ease; }
     .profile-img:hover { transform: scale(1.05); box-shadow: 0 10px 30px rgba(59,130,246,0.12); }
+
+    /* CTA pulse */
+    .cta-pulse { animation: ctaPulse 2.2s infinite; }
+    @keyframes ctaPulse {
+      0% { box-shadow: 0 0 0 0 rgba(59,130,246,0.22); }
+      60% { box-shadow: 0 8px 16px -6px rgba(59,130,246,0.14); }
+      100% { box-shadow: 0 0 0 0 rgba(59,130,246,0.0); }
+    }
+
+    /* Modal & toast */
+    .modal-overlay { background: rgba(0,0,0,0.5); }
+    .modal { transform: translateY(8px); transition: all .16s ease; }
+    .modal[aria-hidden="true"] { opacity: 0; pointer-events: none; transform: translateY(-4px) scale(.99); }
+    .modal[aria-hidden="false"] { opacity: 1; pointer-events: auto; transform: translateY(0) scale(1); }
+
+    .toast { transition: opacity .25s ease; opacity: 0; }
+    .toast.show { opacity: 1; }
 
     /* Timeline helpers */
     #timeline { display: grid; gap: 2.5rem; }
@@ -47,6 +70,16 @@
     /* Small visual tweaks */
     .card { background: #fff; padding: 1.25rem; border-radius: 0.75rem; box-shadow: 0 6px 20px rgba(2,6,23,0.04); }
     a:focus { outline: 3px solid rgba(59,130,246,0.16); outline-offset: 3px; }
+
+    /* Icons & input */
+    .input-with-icon { position: relative; }
+    .input-with-icon .input-icon { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--text-sub); pointer-events:none; }
+    .input-with-icon input, .input-with-icon textarea { padding-left: 2.75rem; }
+    /* timeline point gradient */
+    .timeline-point { background: linear-gradient(135deg, rgba(59,130,246,1), rgba(6,182,212,1)); }
+    /* small icon color */
+    .icon-muted { color: var(--text-sub); }
+    .badge { background: linear-gradient(90deg,var(--primary),#06b6d4); color:#fff; }
   </style>
 </head>
 <body class="bg-bg-light text-text-primary font-sans leading-relaxed">
@@ -57,13 +90,13 @@
       <div class="flex justify-between items-center h-16">
         <a href="#" class="text-xl font-bold text-primary">陳韡侖｜個人履歷網站</a>
         <div class="hidden md:flex space-x-8">
-          <a href="#hero" class="hover:text-primary transition">首頁</a>
-          <a href="#about" class="hover:text-primary transition">關於我</a>
-          <a href="#education" class="hover:text-primary transition">學歷</a>
-          <a href="#skills" class="hover:text-primary transition">技能</a>
-          <a href="#projects" class="hover:text-primary transition">專案</a>
-          <a href="#certificates" class="hover:text-primary transition">證書</a>
-          <a href="#contact" class="hover:text-primary transition">聯絡</a>
+          <a href="#hero" class="hover:text-primary transition"><i class="fa-solid fa-house mr-2 icon-muted"></i>首頁</a>
+          <a href="#about" class="hover:text-primary transition"><i class="fa-solid fa-user mr-2 icon-muted"></i>關於我</a>
+          <a href="#education" class="hover:text-primary transition"><i class="fa-solid fa-graduation-cap mr-2 icon-muted"></i>學歷</a>
+          <a href="#skills" class="hover:text-primary transition"><i class="fa-solid fa-wrench mr-2 icon-muted"></i>技能</a>
+          <a href="#projects" class="hover:text-primary transition"><i class="fa-solid fa-diagram-project mr-2 icon-muted"></i>專案</a>
+          <a href="#certificates" class="hover:text-primary transition"><i class="fa-solid fa-certificate mr-2 icon-muted"></i>證書</a>
+          <a href="#contact" class="hover:text-primary transition"><i class="fa-solid fa-envelope mr-2 icon-muted"></i>聯絡</a>
         </div>
         <button id="hamburger" class="md:hidden flex flex-col space-y-1 p-2 hamburger" aria-controls="mobile-menu" aria-expanded="false" aria-label="開啟選單">
           <span class="line w-6 h-0.5 bg-text-primary"></span>
@@ -98,7 +131,7 @@
       <p class="text-xl md:text-2xl text-text-secondary mb-6">靜宜大學 人工智慧學系</p>
       <p class="text-base md:text-lg mb-8 max-w-xl mx-auto text-text-secondary">專注於打造直覺、美觀、效能優異的數位體驗，喜歡以簡潔且可維護的程式設計解決問題。</p>
       <div class="flex justify-center gap-4">
-        <a href="#contact" class="inline-block bg-primary text-white px-6 py-3 rounded-full font-medium hover:bg-blue-600 transition transform hover:scale-105">聯絡我</a>
+        <button id="open-contact-modal" class="inline-block bg-primary text-white px-6 py-3 rounded-full font-medium hover:bg-blue-600 transition transform hover:scale-105 cta-pulse" aria-haspopup="dialog" aria-controls="contact-modal"><i class="fa-solid fa-envelope mr-2"></i>聯絡我</button>
         <a href="#projects" class="inline-block border border-primary text-primary px-6 py-3 rounded-full font-medium hover:bg-primary hover:text-white transition">作品集</a>
       </div>
     </div>
@@ -194,16 +227,39 @@
     </div>
   </section>
 
+  <!-- Contact Modal -->
+  <div id="contact-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 min-h-screen overflow-y-auto">
+    <div id="contact-modal-overlay" class="absolute inset-0 modal-overlay"></div>
+    <div role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="contact-modal-title" class="relative modal bg-white max-w-lg w-full rounded-lg p-6 z-10">
+      <button id="contact-modal-close" class="absolute top-3 right-3 text-text-secondary hover:text-text-primary" aria-label="關閉">✕</button>
+      <h3 id="contact-modal-title" class="text-xl font-semibold mb-2">聯絡我</h3>
+      <p class="text-sm text-text-secondary mb-4">填寫簡短訊息，按「寄送」會開啟您的郵件程式。</p>
+      <form id="contact-form" class="space-y-3">
+        <input name="name" placeholder="您的名字" class="w-full border p-2 rounded" required>
+        <input name="email" type="email" placeholder="您的 Email" class="w-full border p-2 rounded" required>
+        <input name="phone" type="tel" inputmode="tel" placeholder="電話 / 手機（可選）" class="w-full border p-2 rounded" pattern="^\+?[0-9\s\-()]{7,20}$" aria-label="電話或手機">
+        <textarea name="message" placeholder="想說的事情" class="w-full border p-2 rounded h-28" required></textarea>
+        <div class="flex justify-end gap-3">
+          <button type="button" id="contact-modal-cancel" class="px-4 py-2 rounded border hover:bg-slate-50">取消</button>
+          <button type="submit" class="px-4 py-2 rounded bg-primary text-white">寄送</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Simple toast -->
+  <div id="toast" class="toast fixed bottom-6 right-6 bg-gray-800 text-white py-2 px-4 rounded hidden z-50">已開啟郵件</div>
+
   <!-- JavaScript -->
   <script>
     // 技能資料
     const skills = [
-      { name: 'HTML', level: 90 },
-      { name: 'CSS', level: 85 },
-      { name: 'JavaScript', level: 88 },
-      { name: 'React', level: 82 },
-      { name: 'Tailwind CSS', level: 95 },
-      { name: 'Git', level: 80 },
+      { name: 'HTML', level: 90, icon: 'fa-brands fa-html5' },
+      { name: 'CSS', level: 85, icon: 'fa-brands fa-css3-alt' },
+      { name: 'JavaScript', level: 88, icon: 'fa-brands fa-js' },
+      { name: 'React', level: 82, icon: 'fa-brands fa-react' },
+      { name: 'Tailwind CSS', level: 95, icon: 'fa-solid fa-wand-magic' },
+      { name: 'Git', level: 80, icon: 'fa-brands fa-git-alt' },
     ];
 
     // 學歷資料
@@ -217,25 +273,26 @@
     // 動態生成技能（含進場動畫）
     const skillsContainer = document.getElementById('skills-container');
     skills.forEach((skill, i) => {
-      const circumference = 2 * Math.PI * 45;
-      const offset = circumference - (skill.level / 100) * circumference;
-      const skillHTML = `
-        <div class="flex flex-col items-center opacity-0 transform translate-y-4 animation-item">
-          <div class="relative w-36 h-36 mb-4">
-            <svg class="progress-ring w-full h-full" viewBox="0 0 100 100">
-              <circle cx="50" cy="50" r="45" stroke="#e5e7eb" stroke-width="8" fill="none"/>
-              <circle class="progress-ring__circle" cx="50" cy="50" r="45" stroke="var(--primary)" stroke-width="8" fill="none"
-                stroke-dasharray="${circumference}" stroke-dashoffset="${circumference}" data-offset="${offset}" />
-            </svg>
-            <div class="absolute inset-0 flex items-center justify-center">
+       const circumference = 2 * Math.PI * 45;
+       const offset = circumference - (skill.level / 100) * circumference;
+       const skillHTML = `
+         <div class="flex flex-col items-center opacity-0 transform translate-y-4 animation-item">
+           <div class="relative w-36 h-36 mb-4">
+             <svg class="progress-ring w-full h-full" viewBox="0 0 100 100">
+               <circle cx="50" cy="50" r="45" stroke="#e5e7eb" stroke-width="8" fill="none"/>
+               <circle class="progress-ring__circle" cx="50" cy="50" r="45" stroke="var(--primary)" stroke-width="8" fill="none"
+                 stroke-dasharray="${circumference}" stroke-dashoffset="${circumference}" data-offset="${offset}" />
+             </svg>
+             <div class="absolute inset-0 flex flex-col items-center justify-center">
+              <i class="${skill.icon} text-primary text-xl mb-1"></i>
               <span class="text-2xl font-bold text-primary">${skill.level}%</span>
-            </div>
-          </div>
-          <h3 class="text-lg font-semibold">${skill.name}</h3>
-        </div>
-      `;
-      skillsContainer.innerHTML += skillHTML;
-    });
+             </div>
+           </div>
+           <h3 class="text-lg font-semibold">${skill.name}</h3>
+         </div>
+       `;
+       skillsContainer.innerHTML += skillHTML;
+     });
 
     // small animation to reveal skill rings
     window.addEventListener('load', () => {
@@ -325,6 +382,74 @@
       const isOpen = hamburger.classList.toggle('active');
       mobileMenu.classList.toggle('hidden');
       hamburger.setAttribute('aria-expanded', String(isOpen));
+    });
+
+    // CTA modal: open / close / submit handlers
+    const openModalBtn = document.getElementById('open-contact-modal');
+    const modal = document.getElementById('contact-modal');
+    const overlay = document.getElementById('contact-modal-overlay');
+    const closeModalBtn = document.getElementById('contact-modal-close');
+    const cancelModalBtn = document.getElementById('contact-modal-cancel');
+    const contactForm = document.getElementById('contact-form');
+    const toast = document.getElementById('toast');
+    const firstInputSelector = 'input[name="name"]';
+
+    function showModal() {
+      modal.classList.remove('hidden');
+      modal.querySelector('.modal').setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      setTimeout(()=> modal.querySelector(firstInputSelector)?.focus(), 50);
+      console.log('CTA: 開啟聯絡表單');
+    }
+    function hideModal() {
+      modal.querySelector('.modal').setAttribute('aria-hidden', 'true');
+      modal.classList.add('hidden');
+      document.body.style.overflow = '';
+      openModalBtn.focus();
+      console.log('CTA: 關閉聯絡表單');
+    }
+
+    openModalBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      showModal();
+    });
+    closeModalBtn.addEventListener('click', hideModal);
+    cancelModalBtn.addEventListener('click', hideModal);
+    overlay.addEventListener('click', hideModal);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !modal.classList.contains('hidden')) hideModal();
+    });
+
+    contactForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const formData = new FormData(contactForm);
+      const name = formData.get('name') || '';
+      const email = formData.get('email') || '';
+      const message = formData.get('message') || '';
+      const mailto = `mailto:alanchen20051125@gmail.com?subject=${encodeURIComponent('[網站聯絡] '+name)}&body=${encodeURIComponent(message + '\n\n--\nFrom: ' + name + ' (' + email + ')')}`;
+      // open user's mail client
+      window.location.href = mailto;
+      hideModal();
+      // small feedback toast
+      toast.textContent = '已開啟郵件，請完成寄送';
+      toast.classList.remove('hidden');
+      toast.classList.add('show');
+      setTimeout(()=> { toast.classList.remove('show'); }, 2200);
+      setTimeout(()=> { toast.classList.add('hidden'); }, 2500);
+      console.log('CTA: 寄送觸發', { name, email });
+    });
+
+    // also intercept any "聯絡" nav link (href="#contact") to open modal as CTA
+    document.querySelectorAll('a[href="#contact"]').forEach(a => {
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        // close mobile menu if open
+        if (window.innerWidth < 768) {
+          mobileMenu.classList.add('hidden');
+          hamburger.classList.remove('active');
+        }
+        showModal();
+      });
     });
 
     // 導覽列滾動效果
