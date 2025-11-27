@@ -420,24 +420,41 @@
       if (e.key === 'Escape' && !modal.classList.contains('hidden')) hideModal();
     });
 
-    contactForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const formData = new FormData(contactForm);
-      const name = formData.get('name') || '';
-      const email = formData.get('email') || '';
-      const message = formData.get('message') || '';
-      const mailto = `mailto:alanchen20051125@gmail.com?subject=${encodeURIComponent('[網站聯絡] '+name)}&body=${encodeURIComponent(message + '\n\n--\nFrom: ' + name + ' (' + email + ')')}`;
-      // open user's mail client
-      window.location.href = mailto;
-      hideModal();
-      // small feedback toast
-      toast.textContent = '已開啟郵件，請完成寄送';
-      toast.classList.remove('hidden');
-      toast.classList.add('show');
-      setTimeout(()=> { toast.classList.remove('show'); }, 2200);
-      setTimeout(()=> { toast.classList.add('hidden'); }, 2500);
-      console.log('CTA: 寄送觸發', { name, email });
-    });
+  contactForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const formData = new FormData(contactForm);
+  const formObj = {
+    name: formData.get('name'),
+    email: formData.get('email'),
+    phone: formData.get('phone') || '',
+    message: formData.get('message')
+  };
+
+  // 🔹 第 1 件事：送到 Google 試算表
+  fetch("你的 Google App Script URL", {
+    method: "POST",
+    body: JSON.stringify(formObj),
+    headers: { "Content-Type": "application/json" }
+  }).then(res => res.json())
+    .then(result => console.log("已寫入試算表：", result))
+    .catch(err => console.error("寫入試算表時發生錯誤：", err));
+
+  // 🔹 第 2 件事：同時保持 mailto 開信箱
+  const mailto = `mailto:alanchen20051125@gmail.com
+    ?subject=${encodeURIComponent('[網站聯絡] ' + formObj.name)}
+    &body=${encodeURIComponent(formObj.message + '\n\n--\nFrom: ' + formObj.name + ' (' + formObj.email + ')')}`;
+
+  window.location.href = mailto;
+
+  hideModal();
+  toast.textContent = '已送出並開啟郵件';
+  toast.classList.remove('hidden');
+  toast.classList.add('show');
+  setTimeout(()=> toast.classList.remove('show'), 2200);
+  setTimeout(()=> toast.classList.add('hidden'), 2500);
+});
+
 
     // also intercept any "聯絡" nav link (href="#contact") to open modal as CTA
     document.querySelectorAll('a[href="#contact"]').forEach(a => {
